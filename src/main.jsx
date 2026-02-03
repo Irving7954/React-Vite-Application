@@ -6,13 +6,5 @@ import App from './App.jsx'
 const fruitlist = ['apple', 'banana', 'cherry'];
 
 createRoot(document.getElementById('root')).render(
-    <ul>
-      {fruitlist.map((fruit, index, array) => {
-        return (
-          <li key={fruit}>
-            Number: {fruit}, Index: {index}, Array: {array}
-          </li>
-        );
-      })}
-    </ul>
+	<App name="Tim" age={30} />
 )
