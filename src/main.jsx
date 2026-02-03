@@ -3,20 +3,16 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
-const myelement = (
-  <table>
-    <tr>
-      <th>Name</th>
-    </tr>
-    <tr>
-      <td>John</td>
-    </tr>
-    <tr>
-      <td>Elsa</td>
-    </tr>
-  </table>
-);
+const fruitlist = ['apple', 'banana', 'cherry'];
 
 createRoot(document.getElementById('root')).render(
-  myelement
+    <ul>
+      {fruitlist.map((fruit, index, array) => {
+        return (
+          <li key={fruit}>
+            Number: {fruit}, Index: {index}, Array: {array}
+          </li>
+        );
+      })}
+    </ul>
 )
