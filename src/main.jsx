@@ -6,5 +6,5 @@ import App from './App.jsx'
 const fruitlist = ['apple', 'banana', 'cherry'];
 
 createRoot(document.getElementById('root')).render(
-	<App name="Tim" age={30} />
+	<App name={"Tim"} age={30} />
 )
