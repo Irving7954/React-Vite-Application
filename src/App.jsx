@@ -4,17 +4,39 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App(props) {
-	const { brand = "Hummer", useBrand = false, name = "Bob", age = 90 } = props;
+	const { brandList = ["Hummer"], useBrands = false} = props;
+	
 	const [count, setCount] = useState(0);
+	const [name, setName] = useState("");
+	
+	function handleChange(e) {
+		setName(e.target.value);
+	}
+	
+	function handleSubmit(e) {
+		e.preventDefault();
+		alert(name);
+	}
 	
 	return (
-		<div style={{background: 'lightblue'}}>
-			{useBrand && <h4>Hi, I am a {brand}!</h4>}
+		<div style={{background: 'lightgreen'}}>
+			{useBrands && brandList.map((brand, index) => <h5 key={index}>I have a { brand }!</h5>)}
 			<div>{props.children} </div>
-			<h3>Hello, {name}! You are {age} years old.</h3>
 			<button onClick={() => setCount(count + 1)}>
 				Count: {count}
 			</button>
+			<form onSubmit={handleSubmit}>
+				<label>Enter your name:
+					<input
+						type="text" 
+						value={name}
+						onChange={handleChange}
+				/>
+				</label>
+				<p>Current name: {name}</p>
+				<input type="submit" />
+			</form>
+			
 		</div>
 
 	);
