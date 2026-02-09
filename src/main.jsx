@@ -6,8 +6,9 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
 	<>
 		<h2>This should be white since the parent component has no style!</h2>
-		<App /*brand={"Ferrari"} 
-			name={"Tim"} 
+		<App brand={"Ferrari"}
+			 useBrand
+			/*name={"Tim"} 
 			--age={30}*/>
 			<h2>This should be blue since the child component has a blue style!</h2>
 		</App>
