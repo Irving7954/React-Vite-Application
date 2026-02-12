@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App(props) {
@@ -10,9 +8,9 @@ function App(props) {
 	
 	const handleChange = (e) => {
 		console.log(inputs.isEnabled);
-		if(inputs.isEnabled) {
-			const target = e.target;
-			const name = target.name;
+		const target = e.target;
+		const name = target.name;
+		if(target.name == "isEnabled" || inputs.isEnabled) {
 			const value = target.type == 'checkbox' ? target.checked : target.value;
 			setInputs(values => ({...values, [name]: value}))
 		}
@@ -53,7 +51,7 @@ function App(props) {
 				</>
 		    )}
 			
-			<form onSubmit={handleNameSubmit} disabled={!inputs.isEnabled}>
+			<form onSubmit={handleNameSubmit}>
 				<label>Enter your name:			
 					<input
 						type="text"
@@ -65,7 +63,7 @@ function App(props) {
 				<input type="submit" />
 			</form>
 			
-			<form onSubmit={handleTxtSubmit} disabled={!inputs.isEnabled}>
+			<form onSubmit={handleTxtSubmit}>
 				<label>Write here:
 					<textarea
 						name="txt"
