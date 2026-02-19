@@ -1,10 +1,31 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom';
 import './App.css'
+
+function Modal({ onClick, children }) {
+  return createPortal(
+    <button 
+      onClick={onClick}
+      style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        padding: '10px',
+        background: 'blue',
+        color: 'white'
+      }}>
+      {children}
+    </button>,
+    document.body
+  );
+}
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
 	
 	const [inputs, setInputs] = useState({brand: brandList[0], isEnabled: true});
+	const [count1, setCount1] = useState(0);
+	const [count2, setCount2] = useState(0);
 	
 	const handleChange = (e) => {
 		console.log(inputs.isEnabled);
@@ -37,17 +58,23 @@ function App(props) {
 	}
 	
 	return (
-		<div style={{background: 'lightgreen'}}>
+		<div onClick={() => {setCount1(c => c + 1)}} style={{background: 'orange', padding: '20px', border: '2px solid black', margin: '20px'}}>
 			{useBrands && (
 				<>
 					<form onSubmit={handleBrandSubmit}>
 						<label>Enter your brand:
-							<select name="brand" value={inputs.brand} onChange={handleChange}>
-							{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>)}
+							<select name="brand" value={inputs.brand} onChange={handleChange} disabled = {true}>
+								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>)}
 							</select>
+							{ brandList.map((brand, index) => 
+								<label>
+									<input key={index} type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} />
+									{brand}
+								</label>)
+							}
 						</label>
 						<input type="submit" />
-					</form>
+					</form>	
 				</>
 		    )}
 			
@@ -86,9 +113,20 @@ function App(props) {
 				<input type="submit" />
 			</form>
 			
-			<div>{props.children} </div>
+			<h2>Div Clicked: {count1}</h2>
+			<h2>Button Clicked: {count2}</h2>     
+			
+			<Modal
+				onClick={(e) => {
+				// This runs first
+					setCount2(c => c + 1);
+				}}>
+				Floating Button
+			</Modal>
 		</div>
 	);
 }
+
+
 
 export default App
