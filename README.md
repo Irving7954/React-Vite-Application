@@ -2,7 +2,7 @@ This is a simple React-Vite application that was created from a React Vite tutor
 
 Currently, this repo is fluid since I am mainly reviewing React with modern build tools, so I will update this with more details when I have a better idea of my end product.
 
-Here are the tutorial's comments about plugins, the compiler, and the ESLINT configuration:
+For future reference, here are the tutorial's comments about plugins, the compiler, and the ESLINT configuration:
 
 # React + Vite
 
