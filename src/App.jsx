@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
-import './App.css'
+import './App.css';
+import MyFruits from "./MyFruits";
 
 function Modal({ onClick, children }) {
   return createPortal(
@@ -56,6 +57,8 @@ function App(props) {
 		e.preventDefault();
 		alert(inputs.isEnabled);
 	}
+	
+	const Fruits = lazy(() => import("./MyFruits"));
 	
 	return (
 		<div onClick={() => {setCount1(c => c + 1)}} style={{background: 'orange', padding: '20px', border: '2px solid black', margin: '20px'}}>
@@ -123,6 +126,10 @@ function App(props) {
 				}}>
 				Floating Button
 			</Modal>
+			
+			<Suspense fallback={<div>Loading...</div>}>
+				<Fruits />
+			</Suspense>
 		</div>
 	);
 }
