@@ -1,24 +1,22 @@
 import { useState, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
 import './App.css';
+import styles from "./Button.module.css";
 import MyFruits from "./MyFruits";
 
-function Modal({ onClick, children }) {
-  return createPortal(
-    <button 
-      onClick={onClick}
-      style={{
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        padding: '10px',
-        background: 'blue',
-        color: 'white'
-      }}>
-      {children}
-    </button>,
-    document.body
-  );
+function Modal({ usePrimary, onClick, children }) {
+	let styleObj = styles.secondary;
+	if(usePrimary) {
+		styleObj = styles.primary;
+	};
+	return createPortal(
+		<button 
+			onClick={onClick}
+			className={`${styleObj}`}>
+		{children}
+		</button>,
+		document.body
+	);
 }
 
 function App(props) {
@@ -123,10 +121,18 @@ function App(props) {
 			<h2>Button Clicked: {count2} </h2>     
 			
 			<Modal
+				usePrimary={true}
 				onClick={(e) => {
 					setCount2(c => c + 1);
 				}}>
-				Floating Button
+				Bottom Left Button
+			</Modal>
+			<Modal
+				usePrimary={false}
+				onClick={(e) => {
+					setCount2(c => c + 1);
+				}}>
+				Bottom Right Button
 			</Modal>
 			
 			<Suspense fallback={<div>Loading...</div>}>
