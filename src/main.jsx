@@ -5,7 +5,8 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
 	<>
-		<App brandList={["Ferrari", "Aston Martin", "McClaren"]}
+		<App 
+			brandList={["Ferrari", "Aston Martin", "McClaren"]}
 			useBrands={true}>
 		</App>
 	</>

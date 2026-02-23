@@ -61,7 +61,10 @@ function App(props) {
 	const Fruits = lazy(() => import("./MyFruits"));
 	
 	return (
-		<div onClick={() => {setCount1(c => c + 1)}} style={{background: 'orange', padding: '20px', border: '2px solid black', margin: '20px'}}>
+		<div 
+			onClick={() => {setCount1(c => c + 1)}} 
+			className = {"box"}
+		>
 			{useBrands && (
 				<>
 					<form onSubmit={handleBrandSubmit}>
@@ -117,11 +120,10 @@ function App(props) {
 			</form>
 			
 			<h2>Div Clicked: {count1}</h2>
-			<h2>Button Clicked: {count2}</h2>     
+			<h2>Button Clicked: {count2} </h2>     
 			
 			<Modal
 				onClick={(e) => {
-				// This runs first
 					setCount2(c => c + 1);
 				}}>
 				Floating Button
@@ -133,7 +135,5 @@ function App(props) {
 		</div>
 	);
 }
-
-
 
 export default App
