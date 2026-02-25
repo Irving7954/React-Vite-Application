@@ -1,23 +1,53 @@
 import { useState, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
 import './App.css';
-import styles from "./Button.module.css";
 import MyFruits from "./MyFruits";
+import styled from 'styled-components';
 
-function Modal({ usePrimary, onClick, children }) {
-	let styleObj = styles.secondary;
-	if(usePrimary) {
-		styleObj = styles.primary;
-	};
-	return createPortal(
-		<button 
-			onClick={onClick}
-			className={`${styleObj}`}>
-		{children}
-		</button>,
-		document.body
+const Button = styled.button`
+	border: 2px dashed red;
+	border-radius: 20px;
+	cursor: pointer;
+	position: fixed;
+	bottom: 20px;
+	padding: 10px;
+	width: 200px;
+	background-color: blue;
+	color: white;
+`;
+	
+const LeftButton = styled(Button)`
+	left: 20px;
+	align-content:left;
+`;
+
+const RightButton = styled(Button)`
+	right: 20px;
+	align-content:right;
+`;
+
+function Modal({ isLeft, onClick, children }) {	
+	if(isLeft) {
+		return createPortal (
+			<LeftButton onClick={onClick}>
+				{children}
+			</LeftButton>
+		, document.body
+		);
+	}
+	return createPortal (
+		<RightButton onClick={onClick}>
+			{children}
+		</RightButton>
+		, document.body
 	);
 }
+
+const CustomLoadingHeader = styled.h1`
+		padding: 10px 20px;
+		background-color: ${props => props.useBrands ? 'black' : 'blue'};
+		color: yellow;
+`;	
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
@@ -27,7 +57,6 @@ function App(props) {
 	const [count2, setCount2] = useState(0);
 	
 	const handleChange = (e) => {
-		console.log(inputs.isEnabled);
 		const target = e.target;
 		const name = target.name;
 		if(target.name == "isEnabled" || inputs.isEnabled) {
@@ -57,7 +86,7 @@ function App(props) {
 	}
 	
 	const Fruits = lazy(() => import("./MyFruits"));
-	
+		
 	return (
 		<div 
 			onClick={() => {setCount1(c => c + 1)}} 
@@ -121,7 +150,7 @@ function App(props) {
 			<h2>Button Clicked: {count2} </h2>     
 			
 			<Modal
-				usePrimary={true}
+				isLeft={true}
 				onClick={(e) => {
 					setCount2(c => c + 1);
 				}}>
@@ -135,7 +164,7 @@ function App(props) {
 				Bottom Right Button
 			</Modal>
 			
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<CustomLoadingHeader>Loading...</CustomLoadingHeader>}>
 				<Fruits />
 			</Suspense>
 		</div>

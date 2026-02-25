@@ -10,13 +10,13 @@
 	color: white;
 }
 
-.primary {
+.left {
 	composes: myButton;
 	left: 20px;
 	align-content:left;
 }
 
-.secondary {
+.right {
 	composes: myButton;
 	right: 20px;
 	align-content:right;
