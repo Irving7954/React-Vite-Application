@@ -99,12 +99,12 @@ function App(props) {
 							<select name="brand" value={inputs.brand} onChange={handleChange} disabled = {true}>
 								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>)}
 							</select>
-							{ brandList.map((brand, index) => 
-								<label>
-									<input key={index} type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} />
+							{ brandList.map((brand, index) =>
+								<label key={index}>
+									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} />
 									{brand}
-								</label>)
-							}
+								</label>
+							)   }
 						</label>
 						<input type="submit" />
 					</form>	
