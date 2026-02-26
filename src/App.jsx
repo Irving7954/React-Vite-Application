@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import './App.css';
 import MyFruits from "./MyFruits";
 import styled from 'styled-components';
+import { BrowserRouter, Routes, Route, Link, Outlet } from 'react-router-dom';
 
 const Button = styled.button`
 	border: 2px dashed red;
@@ -25,6 +26,30 @@ const RightButton = styled(Button)`
 	right: 20px;
 	align-content:right;
 `;
+
+function Home() {
+  return <h1>Home Page</h1>;
+}
+
+function About() {
+	return (
+		<div>
+			<h1>About Page</h1>
+			<nav style={{ color: "lightgreen" }}>
+				<Link to="/about/child">Child</Link>
+			</nav> 
+			<Outlet />
+		</div>
+	);
+}
+
+function Contact() {
+  return <h1>Contact Page</h1>;
+}
+
+function Child() {
+  return <h1>Child Page</h1>;
+}
 
 function Modal({ isLeft, onClick, children }) {	
 	if(isLeft) {
@@ -167,6 +192,21 @@ function App(props) {
 			<Suspense fallback={<CustomLoadingHeader>Loading...</CustomLoadingHeader>}>
 				<Fruits />
 			</Suspense>
+			
+			<BrowserRouter>
+				<nav>
+					<Link to="/">Home</Link> |{" "}
+					<Link to="/about">About</Link> |{" "}
+					<Link to="/contact">Contact</Link>
+				</nav>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/about" element={<About />}>
+						<Route path="child" element={<Child />} />
+					</Route>
+					<Route path="/contact" element={<Contact />} />
+				</Routes>
+			</BrowserRouter>
 		</div>
 	);
 }
