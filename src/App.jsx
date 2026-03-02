@@ -1,44 +1,19 @@
-import { useState, Suspense, lazy } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useTransition, useRef } from 'react';
 import './App.css';
-import MyFruits from "./MyFruits";
-import styled from 'styled-components';
 import { BrowserRouter, Routes, Route, NavLink, Outlet, useParams } from 'react-router-dom';
-
-const Button = styled.button`
-	border: 2px dashed red;
-	border-radius: 20px;
-	cursor: pointer;
-	position: fixed;
-	bottom: 20px;
-	padding: 10px;
-	width: 200px;
-	background-color: blue;
-	color: white;
-`;
-	
-const LeftButton = styled(Button)`
-	left: 20px;
-	align-content:left;
-`;
-
-const RightButton = styled(Button)`
-	right: 20px;
-	align-content:right;
-`;
 
 const navLinkStyles = ({ isActive }) => ({
 	fontWeight: isActive ? "bold" : "normal"
 });
 
 function Home() {
-  return <h1>Home Page</h1>;
+  return <h3>Home Page</h3>;
 }
 
 function About() {
 	return (
 		<div>
-			<h1>About Page</h1>
+			<h3>About Page</h3>
 			<nav>
 				<NavLink to="/about/:param" style={navLinkStyles}>Param</NavLink>
 			</nav> 
@@ -48,44 +23,50 @@ function About() {
 }
 
 function Contact() {
-  return <h1>Contact Page</h1>;
+  return <h3>Contact Page</h3>;
 }
 
 function ParameterizedPage() {
 	const { param } = useParams();
 	
-	return <h1>{param} Page</h1>;
+	return <h5>{param}</h5>;
 }
 
-function Modal({ isLeft, onClick, children }) {	
-	if(isLeft) {
-		return createPortal (
-			<LeftButton onClick={onClick}>
-				{children}
-			</LeftButton>
-		, document.body
-		);
-	}
-	return createPortal (
-		<RightButton onClick={onClick}>
-			{children}
-		</RightButton>
-		, document.body
-	);
+function SearchResults({ query }) {
+  // Simulate slow search results
+  const items = [];
+  if (query) {
+	  for (let i = 0; i < 50000; i++) {
+		  items.push(<li key={i}>Result for {query} - {i}</li>);
+	  }
+  }
+  return <ul>{items}</ul>;
 }
-
-const CustomLoadingHeader = styled.h1`
-		padding: 10px 20px;
-		background-color: ${props => props.useBrands ? 'black' : 'blue'};
-		color: yellow;
-`;	
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
 	
 	const [inputs, setInputs] = useState({brand: brandList[0], isEnabled: true});
-	const [count1, setCount1] = useState(0);
-	const [count2, setCount2] = useState(0);
+	
+	const [input, setInput] = useState('');
+	const [query, setQuery] = useState('');
+	const [isPending, startTransition] = useTransition();
+	
+	const nameFieldRef = useRef();
+	const brandFieldRef = useRef();
+	const txtFieldRef = useRef();
+	const isEnabledFieldRef = useRef();
+
+	const handleInputChange = (e) => {
+		// Urgent: Update input field
+		setInput(e.target.value);
+
+		// Non-urgent: Update search results
+		
+		startTransition(() => {
+			setQuery(e.target.value);
+		});
+	};
 	
 	const handleChange = (e) => {
 		const target = e.target;
@@ -98,41 +79,40 @@ function App(props) {
 	
 	function handleNameSubmit(e) {
 		e.preventDefault();
+		nameFieldRef.current.focus();
 		alert(inputs.firstName);
 	}
 	
 	function handleBrandSubmit(e) {
 		e.preventDefault();
+		brandFieldRef.current.focus();
 		alert(inputs.brand);
 	}
 	
 	function handleTxtSubmit(e) {
 		e.preventDefault();
+		txtFieldRef.current.focus();
 		alert(inputs.txt);
 	}
 	
 	function handleIsEnabledSubmit(e) {
 		e.preventDefault();
+		isEnabledFieldRef.current.focus();
 		alert(inputs.isEnabled);
 	}
-	
-	const Fruits = lazy(() => import("./MyFruits"));
-		
+			
 	return (
-		<div 
-			onClick={() => {setCount1(c => c + 1)}} 
-			className = {"box"}
-		>
+		<div className = {"box"}>
 			{useBrands && (
 				<>
 					<form onSubmit={handleBrandSubmit}>
 						<label>Enter your brand:
-							<select name="brand" value={inputs.brand} onChange={handleChange} disabled = {true}>
+							<select name="brand" value={inputs.brand} onChange={handleChange} ref = {brandFieldRef}>
 								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>)}
 							</select>
 							{ brandList.map((brand, index) =>
 								<label key={index}>
-									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} />
+									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} disabled = {true}/>
 									{brand}
 								</label>
 							)   }
@@ -149,6 +129,7 @@ function App(props) {
 						name="firstName"
 						value={inputs.firstName}
 						onChange={handleChange}
+						ref = {nameFieldRef}
 					/>
 				</label>
 				<input type="submit" />
@@ -160,6 +141,7 @@ function App(props) {
 						name="txt"
 						value={inputs.txt}
 						onChange={handleChange}
+						ref = {txtFieldRef}
 					/>
 				</label>
 				<input type="submit" />
@@ -172,33 +154,12 @@ function App(props) {
 						name="isEnabled"
 						checked={inputs.isEnabled}
 						onChange={handleChange}
+						ref = {isEnabledFieldRef}
 					/>
 				</label>
 				<input type="submit" />
 			</form>
-			
-			<h2>Div Clicked: {count1}</h2>
-			<h2>Button Clicked: {count2} </h2>     
-			
-			<Modal
-				isLeft={true}
-				onClick={(e) => {
-					setCount2(c => c + 1);
-				}}>
-				Bottom Left Button
-			</Modal>
-			<Modal
-				usePrimary={false}
-				onClick={(e) => {
-					setCount2(c => c + 1);
-				}}>
-				Bottom Right Button
-			</Modal>
-			
-			<Suspense fallback={<CustomLoadingHeader>Loading...</CustomLoadingHeader>}>
-				<Fruits />
-			</Suspense>
-			
+						
 			<BrowserRouter>
 				<nav>
 					<NavLink to="/" style={navLinkStyles}>Home</NavLink> |{" "}
@@ -213,6 +174,16 @@ function App(props) {
 					<Route path="/contact" element={<Contact />} />
 				</Routes>
 			</BrowserRouter>
+			
+			<div>
+				<input 
+					type="text" 
+					value={input} 
+					onChange={handleInputChange}
+				/>
+				{isPending ? <p>Loading results...</p> : <div> {query} </div>}
+				<SearchResults query={query} />
+			</div>
 		</div>
 	);
 }
