@@ -1,35 +1,14 @@
 import { useState, useTransition, useRef } from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route, NavLink, Outlet, useParams } from 'react-router-dom';
+import './App.scss';
 
-const navLinkStyles = ({ isActive }) => ({
-	fontWeight: isActive ? "bold" : "normal"
-});
-
-function Home() {
-  return <h3>Home Page</h3>;
-}
-
-function About() {
-	return (
-		<div>
-			<h3>About Page</h3>
-			<nav>
-				<NavLink to="/about/:param" style={navLinkStyles}>Param</NavLink>
-			</nav> 
-			<Outlet />
-		</div>
-	);
-}
-
-function Contact() {
-  return <h3>Contact Page</h3>;
-}
-
-function ParameterizedPage() {
-	const { param } = useParams();
-	
-	return <h5>{param}</h5>;
+function withBorder(WrappedComponent) {
+  return function NewComponent(props) {
+    return (
+      <div style={{ border: '2px dashed green', padding: '5px' }}>
+        <WrappedComponent {...props} />
+      </div>
+    );
+  };
 }
 
 function SearchResults({ query }) {
@@ -100,6 +79,8 @@ function App(props) {
 		isEnabledFieldRef.current.focus();
 		alert(inputs.isEnabled);
 	}
+	
+	const SearchResultsWithBorder = withBorder(SearchResults);
 			
 	return (
 		<div className = {"box"}>
@@ -159,30 +140,17 @@ function App(props) {
 				</label>
 				<input type="submit" />
 			</form>
-						
-			<BrowserRouter>
-				<nav>
-					<NavLink to="/" style={navLinkStyles}>Home</NavLink> |{" "}
-					<NavLink to="/about" style={navLinkStyles}>About</NavLink> |{" "}
-					<NavLink to="/contact" style={navLinkStyles}>Contact</NavLink>
-				</nav>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/about" element={<About />}>
-						<Route path=":param" element={<ParameterizedPage />} />
-					</Route>
-					<Route path="/contact" element={<Contact />} />
-				</Routes>
-			</BrowserRouter>
 			
 			<div>
-				<input 
-					type="text" 
-					value={input} 
-					onChange={handleInputChange}
-				/>
+				<label>Enter some text:
+					<input 
+						type="text" 
+						value={input} 
+						onChange={handleInputChange}
+					/>				
+				</label>
 				{isPending ? <p>Loading results...</p> : <div> {query} </div>}
-				<SearchResults query={query} />
+				<SearchResultsWithBorder query={query} />
 			</div>
 		</div>
 	);
