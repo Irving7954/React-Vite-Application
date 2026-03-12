@@ -1,51 +1,36 @@
-import { useState, useTransition, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.scss';
 
-function withBorder(WrappedComponent) {
-  return function NewComponent(props) {
-    return (
-      <div style={{ border: '2px dashed green', padding: '5px' }}>
-        <WrappedComponent {...props} />
-      </div>
-    );
-  };
-}
+function Timer() {
+	const [count, setCount] = useState(0);
+	const [result, setResult] = useState(0);
+	
+	useEffect(() => {
+		let timer = setTimeout(() => {
+			setResult(() => count * 2);
+		}, 1000);
+		
+		return () => clearTimeout(timer)
+	}, [count]);
 
-function SearchResults({ query }) {
-  // Simulate slow search results
-  const items = [];
-  if (query) {
-	  for (let i = 0; i < 50000; i++) {
-		  items.push(<li key={i}>Result for {query} - {i}</li>);
-	  }
-  }
-  return <ul>{items}</ul>;
+	return (
+		<>
+			<button onClick={() => setCount((c) => c + 1)}>+</button>
+			<p>Count: {count}</p>
+			<p>Result: {result}</p>
+		</>
+	);
 }
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
 	
-	const [inputs, setInputs] = useState({brand: brandList[0], isEnabled: true});
-	
-	const [input, setInput] = useState('');
-	const [query, setQuery] = useState('');
-	const [isPending, startTransition] = useTransition();
-	
+	const [inputs, setInputs] = useState({brand: brandList[1], isEnabled: true});
+		
 	const nameFieldRef = useRef();
 	const brandFieldRef = useRef();
 	const txtFieldRef = useRef();
 	const isEnabledFieldRef = useRef();
-
-	const handleInputChange = (e) => {
-		// Urgent: Update input field
-		setInput(e.target.value);
-
-		// Non-urgent: Update search results
-		
-		startTransition(() => {
-			setQuery(e.target.value);
-		});
-	};
 	
 	const handleChange = (e) => {
 		const target = e.target;
@@ -79,8 +64,6 @@ function App(props) {
 		isEnabledFieldRef.current.focus();
 		alert(inputs.isEnabled);
 	}
-	
-	const SearchResultsWithBorder = withBorder(SearchResults);
 			
 	return (
 		<div className = {"box"}>
@@ -88,12 +71,12 @@ function App(props) {
 				<>
 					<form onSubmit={handleBrandSubmit}>
 						<label>Enter your brand:
-							<select name="brand" value={inputs.brand} onChange={handleChange} ref = {brandFieldRef}>
-								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>)}
+							<select name="brand" value={inputs.brand} onChange={handleChange} ref = {brandFieldRef} disabled = {true}>
+								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>) }
 							</select>
 							{ brandList.map((brand, index) =>
 								<label key={index}>
-									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} disabled = {true}/>
+									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange}/>
 									{brand}
 								</label>
 							)   }
@@ -141,17 +124,7 @@ function App(props) {
 				<input type="submit" />
 			</form>
 			
-			<div>
-				<label>Enter some text:
-					<input 
-						type="text" 
-						value={input} 
-						onChange={handleInputChange}
-					/>				
-				</label>
-				{isPending ? <p>Loading results...</p> : <div> {query} </div>}
-				<SearchResultsWithBorder query={query} />
-			</div>
+			<Timer />
 		</div>
 	);
 }
