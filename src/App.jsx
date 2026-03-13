@@ -1,24 +1,32 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, createContext, useContext, useRef, useEffect } from 'react';
 import './App.scss';
 
-function Timer() {
-	const [count, setCount] = useState(0);
-	const [result, setResult] = useState(0);
-	
-	useEffect(() => {
-		let timer = setTimeout(() => {
-			setResult(() => count * 2);
-		}, 1000);
-		
-		return () => clearTimeout(timer)
-	}, [count]);
+const UserContext = createContext();
 
+function Component1() {
+	const [user, setUser] = useState("Dog");
+	
+	return (
+		<UserContext.Provider value={user}>
+			<h5>{`${user} in Component 1`}</h5>
+			<Component2 />
+		</UserContext.Provider>
+	);
+}
+
+function Component2() {
 	return (
 		<>
-			<button onClick={() => setCount((c) => c + 1)}>+</button>
-			<p>Count: {count}</p>
-			<p>Result: {result}</p>
+			<h5>Component 2</h5>
+			<Component3 />
 		</>
+	);
+}
+
+function Component3() {
+	const user = useContext(UserContext);
+	return (
+		<h5>{`${user} in Component 3`}</h5>
 	);
 }
 
@@ -26,11 +34,17 @@ function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
 	
 	const [inputs, setInputs] = useState({brand: brandList[1], isEnabled: true});
-		
+	
 	const nameFieldRef = useRef();
 	const brandFieldRef = useRef();
 	const txtFieldRef = useRef();
 	const isEnabledFieldRef = useRef();
+
+	const lastInputs = useRef("");
+	
+	useEffect(() => {
+		lastInputs.current = inputs.brand;
+	}, [inputs]);
 	
 	const handleChange = (e) => {
 		const target = e.target;
@@ -41,16 +55,16 @@ function App(props) {
 		}
 	}
 	
-	function handleNameSubmit(e) {
-		e.preventDefault();
-		nameFieldRef.current.focus();
-		alert(inputs.firstName);
-	}
-	
 	function handleBrandSubmit(e) {
 		e.preventDefault();
 		brandFieldRef.current.focus();
 		alert(inputs.brand);
+	}
+	
+	function handleNameSubmit(e) {
+		e.preventDefault();
+		nameFieldRef.current.focus();
+		alert(inputs.firstName);
 	}
 	
 	function handleTxtSubmit(e) {
@@ -71,7 +85,7 @@ function App(props) {
 				<>
 					<form onSubmit={handleBrandSubmit}>
 						<label>Enter your brand:
-							<select name="brand" value={inputs.brand} onChange={handleChange} ref = {brandFieldRef} disabled = {true}>
+							<select name="brand" value={inputs.brand} onChange={handleChange} re ={brandFieldRef} disabled={true}>
 								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>) }
 							</select>
 							{ brandList.map((brand, index) =>
@@ -93,7 +107,7 @@ function App(props) {
 						name="firstName"
 						value={inputs.firstName}
 						onChange={handleChange}
-						ref = {nameFieldRef}
+						ref={nameFieldRef}
 					/>
 				</label>
 				<input type="submit" />
@@ -105,7 +119,7 @@ function App(props) {
 						name="txt"
 						value={inputs.txt}
 						onChange={handleChange}
-						ref = {txtFieldRef}
+						ref={txtFieldRef}
 					/>
 				</label>
 				<input type="submit" />
@@ -118,13 +132,15 @@ function App(props) {
 						name="isEnabled"
 						checked={inputs.isEnabled}
 						onChange={handleChange}
-						ref = {isEnabledFieldRef}
+						ref={isEnabledFieldRef}
 					/>
 				</label>
 				<input type="submit" />
 			</form>
 			
-			<Timer />
+			<Component1 />
+			<h3> Inputs: {inputs.brand}</h3>
+			<h3>Last Inputs: {lastInputs.current}</h3>
 		</div>
 	);
 }
