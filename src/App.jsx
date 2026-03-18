@@ -20,7 +20,16 @@ const reducer = (state, action) => {
 			return state.map((player) => {
 				if (player.id === action.id) {
 					return { ...player, score: player.score + 1 };
-				} 
+				}
+				else {
+					return player;
+				}
+			});
+		case "DECREASE":
+			return state.map((player) => {
+				if (player.id === action.id) {
+					return { ...player, score: player.score - 1 };
+				}
 				else {
 					return player;
 				}
@@ -37,17 +46,27 @@ function Score() {
 		dispatch({ type: "INCREASE", id: player.id });
 	};
 	
+	const handleDecrease = (player) => {
+		dispatch({ type: "DECREASE", id: player.id });
+	};
+	
 	return (
 		<>
 			{score.map((player) => (
 				<div key={player.id}>
 					<label>
+						{player.name}
 						<input
 							type="button"
 							onClick={() => handleIncrease(player)}
-							value={player.name}
+							value={"+"}
 						/>
-						{player.score}
+						<input
+							type="button"
+							onClick={() => handleDecrease(player)}
+							value={"-"}
+						/>
+						{"Score: " + player.score}
 					</label>
 				</div>
 			))}
@@ -64,12 +83,6 @@ function App(props) {
 	const brandFieldRef = useRef();
 	const txtFieldRef = useRef();
 	const isEnabledFieldRef = useRef();
-
-	const lastInputs = useRef("");
-	
-	useEffect(() => {
-		lastInputs.current = inputs.brand;
-	}, [inputs]);
 	
 	const handleChange = (e) => {
 		const target = e.target;
@@ -162,10 +175,7 @@ function App(props) {
 				</label>
 				<input type="submit" />
 			</form>
-			
-			<h5> Brand Inputs: {inputs.brand}</h5>
-			<h5>Last Brand Inputs: {lastInputs.current}</h5>
-			
+						
 			<Score />
 		</div>
 	);
