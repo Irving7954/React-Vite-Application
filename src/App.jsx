@@ -1,78 +1,44 @@
-import { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import './App.scss';
 
-const initialScore = [
-	{
-		id: 1,
-		score: 0,
-		name: "John",
-	},
-	{
-		id: 2,
-		score: 0,
-		name: "Sally",
-	},
-];
+const Button = React.memo(({ onClick, text }) => {
+	//alert(`${text} rendered`);
+	return <button onClick={onClick}>{text}</button>;
+});
 
-const reducer = (state, action) => {
-	switch (action.type) {
-		case "INCREASE":
-			return state.map((player) => {
-				if (player.id === action.id) {
-					return { ...player, score: player.score + 1 };
-				}
-				else {
-					return player;
-				}
-			});
-		case "DECREASE":
-			return state.map((player) => {
-				if (player.id === action.id) {
-					return { ...player, score: player.score - 1 };
-				}
-				else {
-					return player;
-				}
-			});
-		default:
-			return state;
-	}
-};
+function CallbackExample() {
+	const [count1, setCount1] = useState(0);
+	const [count2, setCount2] = useState(0);
+	// I doubt if you would gain anything by memoizing it, but I will commit it
+	// As an example for the purposes of the tutorial
+	const calculation = useMemo(() => expensiveCalculation(count1, count2), [count1, count2]);
+	
+	const handleClick1 = useCallback(() => {
+		setCount1(() => count1 + 1);
+	}, [count1]);
 
-function Score() {
-	const [score, dispatch] = useReducer(reducer, initialScore);
+	const handleClick2 = useCallback(() => {
+		setCount2(() => count2 + 1);
+	}, [count2]);
 	
-	const handleIncrease = (player) => {
-		dispatch({ type: "INCREASE", id: player.id });
-	};
-	
-	const handleDecrease = (player) => {
-		dispatch({ type: "DECREASE", id: player.id });
-	};
-	
+	//alert("Parent rendered");
 	return (
-		<>
-			{score.map((player) => (
-				<div key={player.id}>
-					<label>
-						{player.name}
-						<input
-							type="button"
-							onClick={() => handleIncrease(player)}
-							value={"+"}
-						/>
-						<input
-							type="button"
-							onClick={() => handleDecrease(player)}
-							value={"-"}
-						/>
-						{"Score: " + player.score}
-					</label>
-				</div>
-			))}
-		</>
+		<div>
+			<p>Count 1: {count1}</p>
+			<p>Count 2: {count2}</p>
+			<p>Expensive Calculation: {calculation}</p>
+			<Button onClick={handleClick1} text="Button 1" />
+			<Button onClick={handleClick2} text="Button 2" />
+		</div>
 	);
 }
+
+const expensiveCalculation = (count1, count2) => {
+  for (let i = 0; i < 1000000000; i++) {
+    count1 += 200;
+  }
+  return count1 + count2 * 30;
+};
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
@@ -123,12 +89,12 @@ function App(props) {
 				<>
 					<form onSubmit={handleBrandSubmit}>
 						<label>Enter your brand:
-							<select name="brand" value={inputs.brand} onChange={handleChange} re ={brandFieldRef} disabled={true}>
+							<select name="brand" value={inputs.brand} onChange={handleChange} disabled={true}>
 								{brandList.map((brand, index) => <option key={index} value={brand}>{brand}</option>) }
 							</select>
 							{ brandList.map((brand, index) =>
-								<label key={index}>
-									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange}/>
+								<label key={index} ref ={brandFieldRef}>
+									<input type ="radio" name="brand" value={brand} checked={inputs.brand == brand} onChange={handleChange} ref={brandFieldRef}/>
 									{brand}
 								</label>
 							)   }
@@ -175,8 +141,8 @@ function App(props) {
 				</label>
 				<input type="submit" />
 			</form>
-						
-			<Score />
+			
+			<CallbackExample />
 		</div>
 	);
 }
