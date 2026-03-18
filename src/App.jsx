@@ -1,32 +1,57 @@
-import { useState, createContext, useContext, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useReducer } from 'react';
 import './App.scss';
 
-const UserContext = createContext();
+const initialScore = [
+	{
+		id: 1,
+		score: 0,
+		name: "John",
+	},
+	{
+		id: 2,
+		score: 0,
+		name: "Sally",
+	},
+];
 
-function Component1() {
-	const [user, setUser] = useState("Dog");
+const reducer = (state, action) => {
+	switch (action.type) {
+		case "INCREASE":
+			return state.map((player) => {
+				if (player.id === action.id) {
+					return { ...player, score: player.score + 1 };
+				} 
+				else {
+					return player;
+				}
+			});
+		default:
+			return state;
+	}
+};
+
+function Score() {
+	const [score, dispatch] = useReducer(reducer, initialScore);
+	
+	const handleIncrease = (player) => {
+		dispatch({ type: "INCREASE", id: player.id });
+	};
 	
 	return (
-		<UserContext.Provider value={user}>
-			<h5>{`${user} in Component 1`}</h5>
-			<Component2 />
-		</UserContext.Provider>
-	);
-}
-
-function Component2() {
-	return (
 		<>
-			<h5>Component 2</h5>
-			<Component3 />
+			{score.map((player) => (
+				<div key={player.id}>
+					<label>
+						<input
+							type="button"
+							onClick={() => handleIncrease(player)}
+							value={player.name}
+						/>
+						{player.score}
+					</label>
+				</div>
+			))}
 		</>
-	);
-}
-
-function Component3() {
-	const user = useContext(UserContext);
-	return (
-		<h5>{`${user} in Component 3`}</h5>
 	);
 }
 
@@ -138,9 +163,10 @@ function App(props) {
 				<input type="submit" />
 			</form>
 			
-			<Component1 />
-			<h3> Inputs: {inputs.brand}</h3>
-			<h3>Last Inputs: {lastInputs.current}</h3>
+			<h5> Brand Inputs: {inputs.brand}</h5>
+			<h5>Last Brand Inputs: {lastInputs.current}</h5>
+			
+			<Score />
 		</div>
 	);
 }
