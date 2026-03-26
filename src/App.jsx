@@ -1,43 +1,29 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.scss';
 
-const Button = React.memo(({ onClick, text }) => {
-	//alert(`${text} rendered`);
-	return <button onClick={onClick}>{text}</button>;
-});
-
-function CallbackExample() {
-	const [count1, setCount1] = useState(0);
-	const [count2, setCount2] = useState(0);
-	// I doubt if you would gain anything by memoizing it, but I will commit it
-	// As an example for the purposes of the tutorial
-	const calculation = useMemo(() => expensiveCalculation(count1, count2), [count1, count2]);
+const useFetch = (url) => {
+	const [data, setData] = useState(null);
 	
-	const handleClick1 = useCallback(() => {
-		setCount1(() => count1 + 1);
-	}, [count1]);
-
-	const handleClick2 = useCallback(() => {
-		setCount2(() => count2 + 1);
-	}, [count2]);
+	useEffect(() => {
+		fetch(url)
+			.then((res) => res.json())
+			.then((data) => setData(data));
+		}, [url]);
 	
-	//alert("Parent rendered");
+	return data;
+};
+
+const Home = () => {
+	const data = useFetch("https://jsonplaceholder.typicode.com/todos");
+	
 	return (
-		<div>
-			<p>Count 1: {count1}</p>
-			<p>Count 2: {count2}</p>
-			<p>Expensive Calculation: {calculation}</p>
-			<Button onClick={handleClick1} text="Button 1" />
-			<Button onClick={handleClick2} text="Button 2" />
-		</div>
+		<>
+			{data &&
+				data.map((item) => {
+					return <p key={item.id}>{item.title}</p>;
+			})}
+		</>
 	);
-}
-
-const expensiveCalculation = (count1, count2) => {
-  for (let i = 0; i < 1000000000; i++) {
-    count1 += 200;
-  }
-  return count1 + count2 * 30;
 };
 
 function App(props) {
@@ -141,8 +127,7 @@ function App(props) {
 				</label>
 				<input type="submit" />
 			</form>
-			
-			<CallbackExample />
+			<Home />
 		</div>
 	);
 }
