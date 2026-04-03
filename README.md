@@ -1,4 +1,4 @@
-**Note that the instructions below are based on W3School's React (https://www.w3schools.com/react) tutorial, so this may change in the future if this repo becomes more sophisticated.**
+**Note that the instructions below are based on W3School's React tutorial (https://www.w3schools.com/react).**
 
 To run the React website in this repo, follow the instructions below:
 
