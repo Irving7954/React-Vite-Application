@@ -1,22 +1,29 @@
-This is a simple React-Vite application that was created from a React Vite tutorial.
+**Note that the instructions below are based on W3School's React (https://www.w3schools.com/react) tutorial, so this may change in the future if this repo becomes more sophisticated.**
 
-Currently, this repo is fluid since I am mainly reviewing React with modern build tools, so I will update this with more details when I have a better idea of my end product.
+To run the React website in this repo, follow the instructions below:
 
-For future reference, here are the tutorial's comments about plugins, the compiler, and the ESLINT configuration:
+1. If necessary, download the latest version of Node.js, which should also install the npm build tool.
 
-# React + Vite
+2. Install the Vite build tool with the following command:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ `npm install -g create-vite`
 
-Currently, two official plugins are available:
+3. Create your React application react-app-name with the following command:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+`npm create vite@latest react-app-name -- --template react`
 
-## React Compiler
+For reference, `react-app-name` will be the base folder for your application, so you can change its name as you prefer.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+4. In the terminal, navigate to a separate folder, and clone this repository to the folder with the following command:
 
-## Expanding the ESLint configuration
+`git clone https://github.com/Irving7954/React-Vite-Application`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+5. In your base folder, replace the `src` folder's contents with the contents of the the GitHub repository's `src` folder.
+
+6. In the terminal, go to the base folder, and run the following command:
+
+`npm run dev`
+
+7. Go to http://localhost:5173/ to view the expected website with highlighted forms:
+
+![Expected Forms Image](./screenshot.png)
