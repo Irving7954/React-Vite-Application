@@ -1,6 +1,3 @@
-@use 'sass:color';
-$myColor: purple;
-
 #root {
   margin: 0 auto;
   text-align: center;
@@ -11,8 +8,4 @@ $myColor: purple;
 	padding: 20px;
 	border: 2px solid black;
 	margin: 20px;
-}
-
-input {
-	color: color.adjust($myColor, $lightness: 10%);
 }

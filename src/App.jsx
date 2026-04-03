@@ -1,30 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.scss';
 
-const useFetch = (url) => {
-	const [data, setData] = useState(null);
-	
-	useEffect(() => {
-		fetch(url)
-			.then((res) => res.json())
-			.then((data) => setData(data));
-		}, [url]);
-	
-	return data;
-};
-
-const Home = () => {
-	const data = useFetch("https://jsonplaceholder.typicode.com/todos");
-	
-	return (
-		<>
-			{data &&
-				data.map((item) => {
-					return <p key={item.id}>{item.title}</p>;
-			})}
-		</>
-	);
-};
 
 function App(props) {
 	const { brandList = ["Hummer"], useBrands = false } = props;
@@ -127,7 +103,6 @@ function App(props) {
 				</label>
 				<input type="submit" />
 			</form>
-			<Home />
 		</div>
 	);
 }
