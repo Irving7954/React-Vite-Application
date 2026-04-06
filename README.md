@@ -32,6 +32,6 @@ For reference, `react-app-name` will be the base folder for your application, wh
 
 `npm run dev`
 
-9. Lastly, open `http://localhost:5173/` in your browser to view the expected website with a few forms created in React:
+9. Lastly, open `http://localhost:5173/` in your browser to view the expected website with a few React forms:
 
 ![Expected Forms Image](./screenshot.png)
